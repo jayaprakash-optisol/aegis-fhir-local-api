@@ -9,7 +9,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const { method, url, body } = req;
     const requestId = req.requestId;
 
-    appLogger.log(`[REQ ${requestId}] ${method} ${url} : ${JSON.stringify(body)}`);
+    appLogger.log(`[REQ ${requestId}] ${method} ${url} : ${JSON.stringify(body ?? '{}')}`);
     const now = Date.now();
     return next.handle().pipe(
       tap(() => {
