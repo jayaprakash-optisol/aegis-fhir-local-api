@@ -1,7 +1,7 @@
 {
-  "name": "project-management-api",
+  "name": "aegis-fhir-local-api",
   "version": "0.0.1",
-  "description": "",
+  "description": "Aegis FHIR Local API",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -17,7 +17,22 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:migrate:reset": "prisma migrate reset",
+    "prisma:studio": "prisma studio",
+    "prisma:format": "prisma format",
+    "prisma:validate": "prisma validate",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:reset": "prisma migrate reset",
+    "db:studio": "prisma studio",
+    "db:setup": "prisma generate && prisma migrate dev",
+    "db:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
