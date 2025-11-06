@@ -143,9 +143,7 @@ export class PatientService {
   /**
    * Converts incoming medication data to FHIR MedicationStatement resource format
    */
-  convertToFhirMedicationStatement(
-    createMedicationDto: CreateMedicationStatementDto,
-  ): MedicationStatement {
+  convertToFhirMedicationStatement(createMedicationDto: CreateMedicationStatementDto): MedicationStatement {
     if (!createMedicationDto.patientId) {
       throw new BadRequestException('Patient ID is required');
     }
@@ -269,15 +267,12 @@ export class PatientService {
   /**
    * Creates a MedicationStatement in the FHIR store
    */
-  async createMedicationStatement(
-    createMedicationDto: CreateMedicationStatementDto,
-  ): Promise<MedicationStatement> {
+  async createMedicationStatement(createMedicationDto: CreateMedicationStatementDto): Promise<MedicationStatement> {
     this.logger.log('Converting medication data to FHIR format');
     const fhirMedicationStatement = this.convertToFhirMedicationStatement(createMedicationDto);
 
     this.logger.log('Storing MedicationStatement in FHIR store');
-    const createdMedicationStatement =
-      await this.fhirService.create<MedicationStatement>(fhirMedicationStatement);
+    const createdMedicationStatement = await this.fhirService.create<MedicationStatement>(fhirMedicationStatement);
 
     return createdMedicationStatement;
   }
@@ -294,13 +289,11 @@ export class PatientService {
     const patient = await this.getPatientById(patientId);
 
     // Get all MedicationStatements for this patient
-    const medicationBundle = await this.fhirService.search<MedicationStatement>(
-      'MedicationStatement',
-      { subject: `Patient/${patientId}` },
-    );
+    const medicationBundle = await this.fhirService.search<MedicationStatement>('MedicationStatement', {
+      subject: `Patient/${patientId}`,
+    });
     const medications =
-      medicationBundle.entry?.map((entry) => entry.resource as MedicationStatement).filter(Boolean) ||
-      [];
+      medicationBundle.entry?.map((entry) => entry.resource as MedicationStatement).filter(Boolean) || [];
 
     // Get other related resources (AllergyIntolerance, Condition, Observation, etc.)
     const otherResources: Resource[] = [];
@@ -310,8 +303,7 @@ export class PatientService {
       const allergyBundle = await this.fhirService.search<Resource>('AllergyIntolerance', {
         patient: `Patient/${patientId}`,
       });
-      const allergies =
-        allergyBundle.entry?.map((entry) => entry.resource as Resource).filter(Boolean) || [];
+      const allergies = allergyBundle.entry?.map((entry) => entry.resource as Resource).filter(Boolean) || [];
       otherResources.push(...allergies);
     } catch (error) {
       this.logger.warn('Error fetching AllergyIntolerance resources', error);
@@ -322,8 +314,7 @@ export class PatientService {
       const conditionBundle = await this.fhirService.search<Resource>('Condition', {
         subject: `Patient/${patientId}`,
       });
-      const conditions =
-        conditionBundle.entry?.map((entry) => entry.resource as Resource).filter(Boolean) || [];
+      const conditions = conditionBundle.entry?.map((entry) => entry.resource as Resource).filter(Boolean) || [];
       otherResources.push(...conditions);
     } catch (error) {
       this.logger.warn('Error fetching Condition resources', error);
@@ -334,8 +325,7 @@ export class PatientService {
       const observationBundle = await this.fhirService.search<Resource>('Observation', {
         subject: `Patient/${patientId}`,
       });
-      const observations =
-        observationBundle.entry?.map((entry) => entry.resource as Resource).filter(Boolean) || [];
+      const observations = observationBundle.entry?.map((entry) => entry.resource as Resource).filter(Boolean) || [];
       otherResources.push(...observations);
     } catch (error) {
       this.logger.warn('Error fetching Observation resources', error);
